@@ -20,12 +20,14 @@
 
 #include <iostream>
 #include <opencv2/core/core.hpp>
+#include <opencv2/nonfree/features2d.hpp>
 #include <string>
 
 using std::cout;
 using std::endl;
 using std::vector;
-using cv::Mat;
 using std::string;
+using cv::Mat;
+using cv::KeyPoint;
 
 #endif
