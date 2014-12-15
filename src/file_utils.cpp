@@ -16,6 +16,8 @@
  * =====================================================================================
  */
 #include "file_utils.h"
+#include <dirent.h>
+
 
 bool file_exists(string path) {
   if (FILE *file = fopen(path.c_str(), "r")) {
@@ -26,14 +28,16 @@ bool file_exists(string path) {
   }
 }
 
-string get_image_path(int image_index) {
-  std::stringstream s;
-  s << "path/to/image" << image_index << ".png";
-  return s.str();
-}
-
-string get_sift_file_path(int image_index) {
-  std::stringstream s;
-  s << "path/to/sift_file" << image_index << ".sift";
-  return s.str();
+vector<string> get_files_in_directory(string path) {
+  DIR *dir;
+  struct dirent *ent;
+  vector<string> files;
+  if ((dir = opendir(path.c_str())) != NULL) {
+    /* print all the files and directories within directory */
+    while ((ent = readdir(dir)) != NULL) {
+      files.push_back(ent->d_name);
+    }
+    closedir(dir);
+  }
+  return files;
 }

@@ -19,14 +19,12 @@
 #define FILE_UTILS_H
 
 #include "globals.h"
-#include <string>
 
-using std::string;
+#define IMAGES_PATH_PREFIX "../PNGImages/"
+#define CAR_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "sideviews-cars/")
 
 bool file_exists(string);
 
-string get_image_path(int);
-
-string get_sift_file_path(int);
+vector<string> get_files_in_directory(string);
 
 #endif
