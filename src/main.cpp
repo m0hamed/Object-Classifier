@@ -23,10 +23,10 @@
 using cv::imread;
 
 int main() {
+  vector<string> car_images = get_files_in_directory(CAR_IMAGES_PATH);
   int image_index = 0;
-  while (file_exists(get_image_path(image_index))) {
-    Mat image = imread(get_image_path(image_index), 0);
-    image_index++;
+  for(string image : car_images) {
+    Mat image = imread(image, 0);
   }
   return 0;
 }
