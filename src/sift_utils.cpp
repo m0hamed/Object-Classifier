@@ -48,5 +48,6 @@ vector<Mat> get_category_sift_descriptors(string category_path) {
     extractor.compute(image_resized, keypoints, sift_descriptors);
     category_sift_descriptors.push_back(sift_descriptors);
   }
+  return category_sift_descriptors;
 }
 
