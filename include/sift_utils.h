@@ -21,6 +21,6 @@
 #include "globals.h"
 
 vector<KeyPoint> create_dense_keypoints(int, int, int);
-vector<Mat> get_category_sift_descriptors();
+vector<Mat> get_category_sift_descriptors(string);
 
 #endif

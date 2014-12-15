@@ -19,10 +19,6 @@
 #include "globals.h"
 #include "file_utils.h"
 #include "sift_utils.h"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-using cv::imread;
-using cv::Size;
 
 int main() {
   vector<Mat> car_descriptors = get_category_sift_descriptors(CAR_IMAGES_PATH);

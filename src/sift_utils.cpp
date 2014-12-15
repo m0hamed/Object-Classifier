@@ -17,6 +17,11 @@
  */
 
 #include "sift_utils.h"
+#include "file_utils.h"
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+using cv::imread;
+using cv::Size;
 
 vector<KeyPoint> create_dense_keypoints(int rows, int cols, int grid_size) {
   vector<KeyPoint> points;
