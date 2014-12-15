@@ -35,7 +35,9 @@ vector<string> get_files_in_directory(string path) {
   if ((dir = opendir(path.c_str())) != NULL) {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
-      files.push_back(ent->d_name);
+      if (ent->d_name[0] != '.') { // remove hidden files
+        files.push_back(path + ent->d_name);
+      }
     }
     closedir(dir);
   }
