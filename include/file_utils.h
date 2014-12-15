@@ -22,6 +22,8 @@
 
 #define IMAGES_PATH_PREFIX "../images/"
 #define CAR_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "cars/")
+#define BIKE_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "bikes/")
+#define COW_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "cows/")
 
 bool file_exists(string);
 
