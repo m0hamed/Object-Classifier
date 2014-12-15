@@ -10,13 +10,15 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Mohamed Ashraf (m0hamed)
+ *         Author:  Mohamed Ashraf (m0hamed), Hossam Ahmed (hossam-mossalam)
  *   Organization:  GUC
  *
  * =====================================================================================
  */
 #ifndef GLOBALS_H
 #define GLOBALS_H
+
+#define VOCAB_ITEMS_PER_CATEGORY 25
 
 #include <iostream>
 #include <opencv2/core/core.hpp>
