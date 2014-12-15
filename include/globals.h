@@ -20,10 +20,12 @@
 
 #include <iostream>
 #include <opencv2/core/core.hpp>
+#include <string>
 
 using std::cout;
 using std::endl;
 using std::vector;
 using cv::Mat;
+using std::string;
 
 #endif
