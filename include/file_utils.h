@@ -20,8 +20,8 @@
 
 #include "globals.h"
 
-#define IMAGES_PATH_PREFIX "../PNGImages/"
-#define CAR_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "sideviews-cars/")
+#define IMAGES_PATH_PREFIX "../images/"
+#define CAR_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "cars/")
 
 bool file_exists(string);
 
