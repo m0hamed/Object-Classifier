@@ -34,9 +34,9 @@ vector<KeyPoint> create_dense_keypoints(int rows, int cols, int grid_size) {
 }
 
 vector<Mat> get_category_sift_descriptors(string category_path) {
-  vector<string> car_images = get_files_in_directory(category_path);
+  vector<string> category_images = get_files_in_directory(category_path);
   vector<Mat> category_sift_descriptors;
-  for(string image_path : car_images) {
+  for(string image_path : category_images) {
     cout << "Currently processing " << image_path << endl;
     Mat image = imread(image_path, 0);
     equalizeHist(image, image);
