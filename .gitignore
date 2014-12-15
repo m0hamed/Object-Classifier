@@ -43,3 +43,7 @@ bin/
 # dot files
 .*
 !.gitignore
+!.gitkeep
+
+# image files
+images/*
