@@ -20,10 +20,7 @@
 #include "file_utils.h"
 #include "sift_utils.h"
 #include "classifier_utils.h"
-using cv::kmeans;
 using cv::Rect;
-using cv::TermCriteria;
-using cv::KMEANS_RANDOM_CENTERS;
 
 int main() {
   vector<Mat> car_descriptors = get_category_sift_descriptors(CAR_IMAGES_PATH);
@@ -44,7 +41,8 @@ int main() {
 
   Mat samples(full_vocab.size() * full_vocab.at(0).rows, full_vocab.at(0).cols, CV_8UC1);
   for (int i = 0; i < full_vocab.size(); i++) {
-    full_vocab.at(i).copyTo(samples(Rect(0,i *full_vocab.at(i).rows ,full_vocab.at(i).cols,full_vocab.at(i).rows)));
+    full_vocab.at(i).copyTo(samples(Rect(0,i *full_vocab.at(i).rows ,
+        full_vocab.at(i).cols,full_vocab.at(i).rows)));
   }
 
   Mat temp;
@@ -53,8 +51,38 @@ int main() {
 
   Mat centers;
   Mat labels;
-  TermCriteria t(1, 200, 2);
-  kmeans(samples, 100, labels, t, 1, KMEANS_RANDOM_CENTERS, centers);
+  cv::kmeans(samples, CENTROIDS_COUNT, labels, cv::TermCriteria(1, 100, 2), 1,
+                cv::KMEANS_RANDOM_CENTERS, centers);
 
+  car_descriptors.reserve(car_descriptors.size() + bike_descriptors.size() +
+                              cow_descriptors.size());
+  car_descriptors.insert(car_descriptors.end(), bike_descriptors.begin(),
+                              bike_descriptors.end());
+  car_descriptors.insert(car_descriptors.end(), cow_descriptors.begin(),
+                              cow_descriptors.end());
+  bike_descriptors.clear();
+  cow_descriptors.clear();
+  vector<Mat> full_descriptors = car_descriptors;
+  car_descriptors.clear();
+
+  double dist;
+  Mat histograms = Mat::zeros(full_descriptors.size(), centers.rows, CV_32SC1);
+
+  for (int k = 0; k < full_descriptors.size(); k++) {
+    for (int i = 0; i < full_descriptors.at(k).rows; i++) {
+      double min_distance = std::numeric_limits<double>::infinity();
+      int center_index = -1;
+      Mat current_sample = full_descriptors.at(k).row(i);
+      for (int j = 0; j < centers.rows; j++) {
+        Mat current_center = centers.row(j);
+        dist = norm(current_sample, current_center, cv::NORM_L2);
+        if(dist < min_distance){
+          min_distance = dist;
+          center_index = j;
+        }
+      }
+      histograms.at<int>(k,center_index)++;
+    }
+  }
   return 0;
 }

@@ -19,6 +19,7 @@
 #define GLOBALS_H
 
 #define VOCAB_ITEMS_PER_CATEGORY 25
+#define CENTROIDS_COUNT 100
 
 #include <iostream>
 #include <opencv2/core/core.hpp>
