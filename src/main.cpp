@@ -83,7 +83,7 @@ int main() {
       cows_labels.end());
 
   cout << "Building classifiers..." << endl;
-  vector<CvNormalBayesClassifier> classifiers =  build_classifiers(3, histograms, full_labels);
+  vector<CvNormalBayesClassifier*> classifiers =  build_classifiers(3, histograms, full_labels);
 
   return 0;
 }
