@@ -17,10 +17,9 @@
  */
 
 #include "classifier_utils.h"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <time.h>
+
 using cv::Size;
+using cv::Rect;
 
 vector<Mat> pick_random_images(vector<Mat> category_images, int images_count) {
   vector<int> indices = generate_random_numbers(category_images.size(),
@@ -64,7 +63,7 @@ vector<Mat> combine_vectors_of_mat(vector<Mat> vec1, vector<Mat> vec2,
 }
 
 Mat get_histograms(vector<Mat> full_descriptors, Mat centers) {
-  Mat histograms = Mat::zeros(centers.rows, full_descriptors.size(), CV_32SC1);
+  Mat histograms = Mat::zeros(full_descriptors.size(), centers.rows, CV_32FC1);
   double dist;
   for (int k = 0; k < full_descriptors.size(); k++) {
     for (int i = 0; i < full_descriptors.at(k).rows; i++) {
@@ -79,8 +78,59 @@ Mat get_histograms(vector<Mat> full_descriptors, Mat centers) {
           center_index = j;
         }
       }
-      histograms.at<int>(center_index, k)++;
+      histograms.at<int>(k, center_index)++;
     }
   }
   return histograms;
+}
+
+Mat make_labels(int class_id, vector<int> class_labels, vector<int> indeces){
+  Mat labels(indeces.size(), 1, CV_32FC1);
+  for (int i = 0; i < indeces.size(); i++) 
+    labels.at<int>(i) = class_id == class_labels[indeces[i]];
+  return labels;
+}
+
+vector<CvNormalBayesClassifier> build_classifiers(int num_classes, Mat features,
+    vector<int> class_labels) {
+  int training_size = (int) TRAINING_DATA_SIZE * features.rows;
+  features.convertTo(features, CV_32FC1);
+
+  vector<int> indeces;
+  for (int i = 0; i < features.rows; i++)
+    indeces.push_back(i); std::random_shuffle(indeces.begin(), indeces.end());
+
+  Mat training_set(training_size, features.cols, CV_32FC1);
+  for (int i = 0; i < training_size; i++) 
+    training_set.row(i) = features.row(indeces[i]);
+
+  Mat testing_set(features.rows - training_size, features.cols,
+      CV_32FC1); 
+  for (int i = training_size; i < features.rows; i++)
+    testing_set.row(i - training_size) = features.row(indeces[i]);
+
+  cout << testing_set << endl;
+  
+  vector<CvNormalBayesClassifier> classifiers;
+  for (int i = 0; i < num_classes; i++) {
+    Mat pos_labels = make_labels(i, class_labels, indeces);
+    training_set.convertTo(training_set, CV_32FC1);
+    pos_labels.convertTo(pos_labels, CV_32FC1);
+    classifiers.push_back(CvNormalBayesClassifier(training_set,
+          pos_labels(cv::Rect(0, 0, training_size, 1))));
+    double acc = eval_classifier(classifiers[i], testing_set,
+        pos_labels(cv::Rect(training_size, 0, testing_set.rows, 1)));
+    cout << "Acc of Classifier " << i << " = " << acc << endl;
+  }
+  return classifiers;
+} 
+
+double eval_classifier(CvNormalBayesClassifier& nb_classifier, Mat testing_set, Mat labels) {
+  Mat result;
+  nb_classifier.predict(testing_set, &result);
+  int correct = 0;
+  for (int i = 0; i < result.rows; i++) {
+     correct += labels.at<int>(i) == result.at<int>(i);
+  }
+  return correct / (double) testing_set.rows;
 }
