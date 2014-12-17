@@ -27,7 +27,8 @@ using cv::Rect;
 int main() {
 
   int num_classes;
-  create_sift_descs(IMAGES_PATH, &num_classes);
+//  create_sift_descs(IMAGES_PATH, DESC_PATH, &num_classes);
+    create_bows(DESC_PATH, BOW_PATH, &num_classes);
   return 0;
 //  int num_cars, num_bikes, num_cows;
 //  vector<Mat> car_descriptors = get_category_sift_descriptors(CAR_IMAGES_PATH);

@@ -30,7 +30,6 @@
 vector<Mat> pick_random_images(vector<Mat>, int);
 vector<int> generate_random_numbers(int, int);
 vector<Mat> combine_vectors_of_mat(vector<Mat>, vector<Mat>, vector<Mat>);
-Mat get_histograms(vector<Mat>, Mat);
 vector<CvNormalBayesClassifier*> build_classifiers(int, Mat, vector<int>);
 double eval_classifier(CvNormalBayesClassifier*, Mat, Mat);
 

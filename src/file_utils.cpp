@@ -44,8 +44,31 @@ vector<string> get_files_in_directory(string path) {
   return files;
 }
 
-void write_file(const string file_path, const Mat data, const string tag) {
+void write_file(const string file_path, const Mat& data, const string tag) {
   FileStorage fs(file_path, FileStorage::WRITE);
   fs << tag << data;
+  fs.release();
+}
+
+void read_file(const string file_path, const string tag, Mat& data) {
+  FileStorage fs;
+  fs.open(file_path, FileStorage::READ);
+  if (!fs.isOpened()) {
+    std::cerr << "Failed to open file: " << file_path << endl;
+    return;
+  }
+  fs[tag] >> data;
+  fs.release();
+}
+
+void read_meta(const string file_path, const string tag, int* rows, int* cols) {
+  FileStorage fs;
+  fs.open(file_path, FileStorage::READ);
+  if (!fs.isOpened()) {
+    std::cerr << "Failed to open file: " << file_path << endl;
+    return;
+  }
+  fs[tag]["rows"] >> *rows;
+  fs[tag]["cols"] >> *cols;
   fs.release();
 }
