@@ -26,7 +26,6 @@ using cv::Rect;
 
 int main() {
 
-  vector<int> a(5,0);
   int num_cars, num_bikes, num_cows;
   vector<Mat> car_descriptors = get_category_sift_descriptors(CAR_IMAGES_PATH);
   num_cars = car_descriptors.size();
