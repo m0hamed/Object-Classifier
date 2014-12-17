@@ -21,5 +21,6 @@
 #include "globals.h"
 vector<Mat> pick_random_images(vector<Mat>, int);
 vector<int> generate_random_numbers(int, int);
-
+vector<Mat> combine_vectors_of_mat(vector<Mat>, vector<Mat>, vector<Mat>);
+Mat get_histograms(vector<Mat>, Mat);
 #endif

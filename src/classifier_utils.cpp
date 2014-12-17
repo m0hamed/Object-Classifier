@@ -52,3 +52,35 @@ vector<int> generate_random_numbers(int max_value, int count) {
   }
   return generated_numbers;
 }
+
+vector<Mat> combine_vectors_of_mat(vector<Mat> vec1, vector<Mat> vec2,
+    vector<Mat> vec3) {
+  vector<Mat> result;
+  result.reserve(vec1.size() + vec2.size() + vec3.size());
+  result.insert(result.end(), vec1.begin(), vec1.end());
+  result.insert(result.end(), vec2.begin(), vec2.end());
+  result.insert(result.end(), vec3.begin(), vec3.end());
+  return result;
+}
+
+Mat get_histograms(vector<Mat> full_descriptors, Mat centers) {
+  Mat histograms = Mat::zeros(full_descriptors.size(), centers.rows, CV_32SC1);
+  double dist;
+  for (int k = 0; k < full_descriptors.size(); k++) {
+    for (int i = 0; i < full_descriptors.at(k).rows; i++) {
+      double min_distance = std::numeric_limits<double>::infinity();
+      int center_index = -1;
+      Mat current_sample = full_descriptors.at(k).row(i);
+      for (int j = 0; j < centers.rows; j++) {
+        Mat current_center = centers.row(j);
+        dist = norm(current_sample, current_center, cv::NORM_L2);
+        if(dist < min_distance) {
+          min_distance = dist;
+          center_index = j;
+        }
+      }
+      histograms.at<int>(k,center_index)++;
+    }
+  }
+  return histograms;
+}
