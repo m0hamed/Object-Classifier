@@ -64,7 +64,7 @@ vector<Mat> combine_vectors_of_mat(vector<Mat> vec1, vector<Mat> vec2,
 }
 
 Mat get_histograms(vector<Mat> full_descriptors, Mat centers) {
-  Mat histograms = Mat::zeros(full_descriptors.size(), centers.rows, CV_32SC1);
+  Mat histograms = Mat::zeros(centers.rows, full_descriptors.size(), CV_32SC1);
   double dist;
   for (int k = 0; k < full_descriptors.size(); k++) {
     for (int i = 0; i < full_descriptors.at(k).rows; i++) {
@@ -79,7 +79,7 @@ Mat get_histograms(vector<Mat> full_descriptors, Mat centers) {
           center_index = j;
         }
       }
-      histograms.at<int>(k,center_index)++;
+      histograms.at<int>(center_index, k)++;
     }
   }
   return histograms;
