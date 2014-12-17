@@ -50,4 +50,3 @@ vector<Mat> get_category_sift_descriptors(string category_path) {
   }
   return category_sift_descriptors;
 }
-
