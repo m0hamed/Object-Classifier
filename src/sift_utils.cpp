@@ -33,12 +33,11 @@ vector<KeyPoint> create_dense_keypoints(int rows, int cols, int grid_size) {
   return points;
 }
 
-vector<Mat> get_category_sift_descriptors(string category_path) {
-  vector<string> category_images = get_files_in_directory(category_path);
+vector<Mat> get_category_sift_descriptors(const string prefix, const vector<string>& category_images) {
   vector<Mat> category_sift_descriptors;
   for(string image_path : category_images) {
     cout << "Currently processing " << image_path << endl;
-    Mat image = imread(image_path, 0);
+    Mat image = imread(prefix + image_path, 0);
     equalizeHist(image, image);
     Mat image_resized;
     resize(image, image_resized, Size(300, 250));
@@ -49,4 +48,18 @@ vector<Mat> get_category_sift_descriptors(string category_path) {
     category_sift_descriptors.push_back(sift_descriptors);
   }
   return category_sift_descriptors;
+}
+
+void create_sift_descs(const string path, int* num_classes) {
+  vector<string> class_paths = get_files_in_directory(path);
+  *num_classes = class_paths.size();
+  string desc_path = DESC_PATH;
+  for (string class_path : class_paths) {
+    vector<string> category_images = get_files_in_directory(path + class_path);
+    vector<Mat> descs = get_category_sift_descriptors(path + class_path + "/",
+        category_images);
+    for (int i = 0; i < descs.size(); i++)
+      write_file(desc_path + class_path + "/" + category_images[i], descs[i],
+          "Dense sift descriptors"); 
+  }
 }

@@ -20,7 +20,10 @@
 
 #include "globals.h"
 
+#define DESC_PATH "../sift/"
+
 vector<KeyPoint> create_dense_keypoints(int, int, int);
-vector<Mat> get_category_sift_descriptors(string);
+vector<Mat> get_category_sift_descriptors(const string prefix, const vector<string>&);
+void create_sift_descs(const string, int*);
 
 #endif

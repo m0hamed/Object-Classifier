@@ -46,4 +46,6 @@ bin/
 !.gitkeep
 
 # image files
+*.png
 images/*
+

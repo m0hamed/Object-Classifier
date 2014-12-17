@@ -16,8 +16,8 @@
  * =====================================================================================
  */
 #include "file_utils.h"
-#include <dirent.h>
 
+using cv::FileStorage;
 
 bool file_exists(string path) {
   if (FILE *file = fopen(path.c_str(), "r")) {
@@ -36,10 +36,16 @@ vector<string> get_files_in_directory(string path) {
     /* print all the files and directories within directory */
     while ((ent = readdir(dir)) != NULL) {
       if (ent->d_name[0] != '.') { // remove hidden files
-        files.push_back(path + ent->d_name);
+        files.push_back(ent->d_name);
       }
     }
     closedir(dir);
   }
   return files;
+}
+
+void write_file(const string file_path, const Mat data, const string tag) {
+  FileStorage fs(file_path, FileStorage::WRITE);
+  fs << tag << data;
+  fs.release();
 }
