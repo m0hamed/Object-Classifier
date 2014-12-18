@@ -21,6 +21,14 @@
 #include "globals.h"
 
 vector<KeyPoint> create_dense_keypoints(int, int, int);
-vector<Mat> get_category_sift_descriptors(string);
+vector<Mat> get_category_sift_descriptors(const string prefix, const
+    vector<string>&);
+void create_sift_descs(const string, const string);
+void create_bows(const string, const string);
+Mat create_vocab(const Mat, const vector<int>, const int, const int);
+Mat read_descs(const string, vector<string>&, vector<int>&, int*, int*);
+Mat get_histograms(const Mat&, const Mat&, const int);
+void write_bows(const string, const string, const Mat&, const vector<string>&,
+    const vector<int>&);
 
 #endif

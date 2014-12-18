@@ -19,14 +19,18 @@
 #define FILE_UTILS_H
 
 #include "globals.h"
+#include <string>
+#include <opencv2/core/core.hpp>
+#include <dirent.h>
 
-#define IMAGES_PATH_PREFIX "../images/"
-#define CAR_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "cars/")
-#define BIKE_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "bikes/")
-#define COW_IMAGES_PATH (string(IMAGES_PATH_PREFIX) + "cows/")
+#define IMAGES_PATH "../images/"
+#define DESC_PATH "../sift/"
+#define BOW_PATH "../bow/"
 
 bool file_exists(string);
-
 vector<string> get_files_in_directory(string);
+void write_file(const string, const Mat&, const string);
+void read_file(const string, const string, Mat& );
+void read_meta(const string, const string, int*, int*);
 
 #endif
