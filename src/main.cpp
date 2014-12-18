@@ -37,15 +37,12 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  if (step > 2) {
-    build_classifiers(BOW_PATH);
-  } else if (step > 1) {
-    create_bows(DESC_PATH, BOW_PATH);
-    build_classifiers(BOW_PATH);
-  } else {
+  if (step <= 0 )
     create_sift_descs(IMAGES_PATH, DESC_PATH);
+
+  if (step <= 1)
     create_bows(DESC_PATH, BOW_PATH);
-    build_classifiers(BOW_PATH);
-  }
+
+  build_classifiers(BOW_PATH);
   return 0;
 }
