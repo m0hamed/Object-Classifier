@@ -62,11 +62,14 @@ void create_sift_descs(const string im_path, const string desc_path) {
     vector<string> category_images = get_files_in_directory(im_path + class_path);
     vector<Mat> descs = get_category_sift_descriptors(im_path + class_path + "/",
         category_images);
+    cout << "Writing sift descriptors for " << class_path << " to disk..."
+        << flush;
     for (int i = 0; i < descs.size(); i++) {
       string path_name = desc_path + class_path + "/" + category_images[i];
       path_name.replace(path_name.end() - 3, path_name.end(), "sift");
-      write_file(path_name, descs[i], "Dense sift descriptors"); 
+      write_file(path_name, descs[i], "Dense sift descriptors");
     }
+    cout << "OK" << endl;
   }
 }
 
@@ -88,9 +91,9 @@ void create_bows(const string desc_path, const string bow_path) {
   write_bows(desc_path, bow_path, histograms, im_names, class_size);
 }
 
-Mat read_descs(const string desc_path, vector<string>& im_names, vector<int>& class_size, 
+Mat read_descs(const string desc_path, vector<string>& im_names, vector<int>& class_size,
     int* num_classes, int* im_rows) {
-  cout << "reading descriptors...";
+  cout << "reading descriptors..." << flush;
   vector<string> class_paths = get_files_in_directory(desc_path);
   *num_classes = class_paths.size();
   vector<string> desc_prefix;
@@ -105,10 +108,10 @@ Mat read_descs(const string desc_path, vector<string>& im_names, vector<int>& cl
   int cols;
   read_meta(desc_prefix[0] + im_names[0], "Dense sift descriptors", im_rows,
       &cols);
-  Mat samples(im_names.size() * *im_rows, cols, CV_32FC1);
+  Mat samples(im_names.size() * (*im_rows), cols, CV_32FC1);
   for (int i = 0; i < im_names.size(); i++) {
     Mat roi = samples(cv::Rect(0, i * *im_rows, cols, *im_rows));
-    read_file(desc_prefix[i] + im_names[i], "Dense sift descriptors", roi); 
+    read_file(desc_prefix[i] + im_names[i], "Dense sift descriptors", roi);
   }
   cout << "Ok" << endl;
   return samples;
@@ -118,7 +121,7 @@ Mat create_vocab(const Mat samples, const vector<int> class_size, const int
     num_classes, const int im_rows) {
   int sample = 0, base = 0;
   Mat vocab(num_classes * VOCAB_ITEMS_PER_CATEGORY * im_rows, samples.cols, CV_32FC1);
-  cout << "creating vocab...";
+  cout << "creating vocab..." << flush;
 
   for (int c = 0; c < num_classes; c++) {
     int size = class_size[c];
@@ -139,7 +142,7 @@ Mat create_vocab(const Mat samples, const vector<int> class_size, const int
 }
 
 Mat get_histograms(const Mat& samples, const Mat& centers, const int im_rows) {
-  cout << "encoding images...";
+  cout << "encoding images..." << flush;
   Mat histograms = Mat::zeros(samples.rows / im_rows, centers.rows, CV_32SC1);
   for (int sample = 0; sample < samples.rows; sample++) {
       double min_distance = std::numeric_limits<double>::infinity();
