@@ -49,3 +49,7 @@ bin/
 *.png
 images/*
 
+# cached files
+*.sift
+*.bow
+
