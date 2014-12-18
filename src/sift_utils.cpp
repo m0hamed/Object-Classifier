@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Mohamed Ashraf (m0hamed)
+ *         Author:  Mohamed Ashraf (m0hamed), Samy Saad (sshihata)
  *   Organization:  GUC
  *
  * =====================================================================================
@@ -46,7 +46,10 @@ vector<Mat> get_category_sift_descriptors(const string prefix, const vector<stri
     resize(image, image_resized, Size(300, 250));
     cv::SiftDescriptorExtractor extractor;
     Mat sift_descriptors;
-    vector<KeyPoint> keypoints = create_dense_keypoints(300, 250, 5);
+    // vector<KeyPoint> keypoints = create_dense_keypoints(300, 250, 5);
+    vector<KeyPoint> keypoints;
+    cv::DenseFeatureDetector detector(1.0f, 1, 0.1f, 5);
+    detector.detect(image_resized, keypoints);
     extractor.compute(image_resized, keypoints, sift_descriptors);
     category_sift_descriptors.push_back(sift_descriptors);
   }
@@ -59,9 +62,11 @@ void create_sift_descs(const string im_path, const string desc_path) {
     vector<string> category_images = get_files_in_directory(im_path + class_path);
     vector<Mat> descs = get_category_sift_descriptors(im_path + class_path + "/",
         category_images);
-    for (int i = 0; i < descs.size(); i++)
-      write_file(desc_path + class_path + "/" + category_images[i], descs[i],
-          "Dense sift descriptors"); 
+    for (int i = 0; i < descs.size(); i++) {
+      string path_name = desc_path + class_path + "/" + category_images[i];
+      path_name.replace(path_name.end() - 3, path_name.end(), "sift");
+      write_file(path_name, descs[i], "Dense sift descriptors"); 
+    }
   }
 }
 
@@ -159,6 +164,7 @@ void write_bows(const string desc_path, const string bow_path, const Mat& hist,
   for (int c = 0; c < class_size.size(); c++) {
     for (int i = 0; i < class_size[c]; i++) {
       string file_path = bow_path + class_paths[c] + "/" + im_names[image];
+      file_path.replace(file_path.end() - 4, file_path.end(), "bow");
       write_file(file_path, hist(Rect(0, image, hist.cols, 1)), "BOW");
       image++;
     }

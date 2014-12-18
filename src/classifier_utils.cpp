@@ -10,7 +10,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Hossam Ahmed (hossam-mossalam)
+ *         Author:  Hossam Ahmed (hossam-mossalam), Samy Shehata (sshihata)
  *   Organization:  GUC
  *
  * =====================================================================================
