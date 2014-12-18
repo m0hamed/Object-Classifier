@@ -19,6 +19,8 @@
 #define CLASSIFIER_UTILS_H
 
 #include "globals.h"
+#include "file_utils.h"
+#include <string>
 #include <algorithm>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -30,7 +32,8 @@
 vector<Mat> pick_random_images(vector<Mat>, int);
 vector<int> generate_random_numbers(int, int);
 vector<Mat> combine_vectors_of_mat(vector<Mat>, vector<Mat>, vector<Mat>);
-vector<CvNormalBayesClassifier*> build_classifiers(int, Mat, vector<int>);
-double eval_classifier(CvNormalBayesClassifier*, Mat, Mat);
+void build_classifiers(const string);
+Mat read_bows(const vector<string>, const string, vector<int>&, int*);
+double eval_classifier(const CvNormalBayesClassifier&, const Mat&, const Mat&);
 
 #endif
