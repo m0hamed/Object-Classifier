@@ -51,7 +51,7 @@ void build_classifiers(const string bows_path) {
     testing_set.row(i - training_size) = features.row(indeces[i]);
 
   for (int i = 0; i < num_classes; i++) {
-    cout << i << ". Classifier " << class_paths[i] << " :" << endl;
+    cout << i + 1 << ". Classifier " << class_paths[i] << " :" << endl;
     cout << "training...";
       Mat pos_labels = make_labels(i, labels, indeces);
       CvNormalBayesClassifier nb_class( CvNormalBayesClassifier(training_set,

@@ -53,9 +53,8 @@ vector<Mat> get_category_sift_descriptors(const string prefix, const vector<stri
   return category_sift_descriptors;
 }
 
-void create_sift_descs(const string im_path, const string desc_path, int* num_classes) {
+void create_sift_descs(const string im_path, const string desc_path) {
   vector<string> class_paths = get_files_in_directory(im_path);
-  *num_classes = class_paths.size();
   for (string class_path : class_paths) {
     vector<string> category_images = get_files_in_directory(im_path + class_path);
     vector<Mat> descs = get_category_sift_descriptors(im_path + class_path + "/",
@@ -105,8 +104,6 @@ Mat read_descs(const string desc_path, vector<string>& im_names, vector<int>& cl
   for (int i = 0; i < im_names.size(); i++) {
     Mat roi = samples(cv::Rect(0, i * *im_rows, cols, *im_rows));
     read_file(desc_prefix[i] + im_names[i], "Dense sift descriptors", roi); 
-    cout <<"roi" << roi.row(0) << endl;
-   cout << "sample" << samples(cv::Rect(0, i * *im_rows, cols, *im_rows)).row(0) << endl;
   }
   cout << "Ok" << endl;
   return samples;
