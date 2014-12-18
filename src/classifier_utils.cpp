@@ -23,7 +23,7 @@ using cv::Rect;
 
 Mat make_labels(int class_id, vector<int> class_labels, vector<int> indeces){
   Mat labels(indeces.size(), 1, CV_32SC1);
-  for (int i = 0; i < indeces.size(); i++) 
+  for (int i = 0; i < indeces.size(); i++)
     labels.at<int>(i) = class_id == class_labels[indeces[i]];
   return labels;
 }
@@ -32,23 +32,30 @@ void build_classifiers(const string bows_path) {
   vector<int> labels;
   int num_classes;
   vector<string> class_paths = get_files_in_directory(bows_path);
-  Mat features = read_bows(class_paths, bows_path, labels, &num_classes);
+  Mat features_int = read_bows(class_paths, bows_path, labels, &num_classes);
+  Mat features(features_int.rows, features_int.cols, CV_32F);
+  features_int.assignTo(features, CV_32FC1);
   int training_size = (int) (TRAINING_DATA_SIZE * features.rows);
 
   vector<int> indeces;
   for (int i = 0; i < features.rows; i++)
-    indeces.push_back(i); 
+    indeces.push_back(i);
   std::random_shuffle(indeces.begin(), indeces.end());
 
   Mat training_set(training_size, features.cols, CV_32FC1);
-  for (int i = 0; i < training_size; i++) 
-    training_set.row(i) = features.row(indeces[i]);
-  cout << training_size << endl;
+  for (int i = 0; i < training_size; i++) {
+    for(int j=0; j < features.cols; j++) {
+      training_set.at<float>(i, j) = features.at<float>(indeces[i], j);
+    }
+  }
 
   Mat testing_set(features.rows - training_size, features.cols,
-      CV_32FC1); 
-  for (int i = training_size; i < features.rows; i++)
-    testing_set.row(i - training_size) = features.row(indeces[i]);
+      CV_32FC1);
+  for(int i = training_size; i < features.rows; i++) {
+    for(int j = 0; j < features.cols; j++) {
+      testing_set.at<float>(i, j) = features.at<float>(indeces[i], j);
+    }
+  }
 
   for (int i = 0; i < num_classes; i++) {
     cout << i + 1 << ". Classifier " << class_paths[i] << " :" << endl;
@@ -57,14 +64,14 @@ void build_classifiers(const string bows_path) {
       CvNormalBayesClassifier nb_class( CvNormalBayesClassifier(training_set,
             pos_labels(cv::Rect(0, 0, 1, training_set.rows))));
       cout << "Ok" << endl;
-  
+
       cout << "evaluating...";
       double acc = eval_classifier(nb_class, testing_set,
           pos_labels(Rect(0, training_set.rows, 1, testing_set.rows)));
       cout << "Ok" << endl;
       cout << "Acc = " << acc * 100 << "%" << endl;
-    } 
-} 
+    }
+}
 
 Mat read_bows(const vector<string> class_paths, const string bow_path,
     vector<int>& labels, int* num_classes) {
@@ -84,11 +91,12 @@ Mat read_bows(const vector<string> class_paths, const string bow_path,
   int cols, rows;
   read_meta(bow_prefix[0] + im_names[0], "BOW", &rows,
       &cols);
-  Mat features(im_names.size() * rows, cols, CV_32SC1);
-  cout << features.size() << endl;
+  Mat features;
   for (int i = 0; i < im_names.size(); i++) {
-    Mat roi = features(cv::Rect(0, i, cols, rows));
-    read_file(bow_prefix[i] + im_names[i], "BOW", roi); 
+    //Mat roi = features(cv::Rect(0, i, cols, rows));
+    Mat temp;
+    read_file(bow_prefix[i] + im_names[i], "BOW", temp);
+    features.push_back(temp);
   }
   cout << "Ok" << endl;
   return features;
