@@ -21,7 +21,7 @@
 
 #define VOCAB_ITEMS_PER_CATEGORY 25
 #define CENTROIDS_COUNT 100
-#define EPSILON 2
+#define EPSILON 0.1
 #define ITERATIONS 100
 #define ATTEMPTS 1
 
@@ -31,6 +31,7 @@
 #include <string>
 
 using std::cout;
+using std::flush;
 using std::endl;
 using std::vector;
 using std::string;
